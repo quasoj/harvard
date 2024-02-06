@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/harvard
+    username: root
+    password: password
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+aliyun:
+  oss:
+    endpoint: https://www.oss-cn-shenzhen.aliyuncs.com
+    access-key-id: LTAI5tJW8C5hLsJUGzvcv4BQ
+    accessKeySecret: 9VdyIGPIvSOph3H3U8JUw2wuOYm2tL
+    bucket-name: harvard-oss

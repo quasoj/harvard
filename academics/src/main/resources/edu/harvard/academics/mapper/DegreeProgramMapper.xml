@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.harvard.academics.mapper.DegreeProgramMapper">
+
+    <insert id="add">
+        insert into degree_program
+            (name, certification, harvard_school, description, image)
+        values (
+            #{name},
+            #{certification},
+            #{harvardSchool},
+            #{description},
+            #{image}
+        )
+    </insert>
+
+    <update id="edit">
+        update degree_program
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="certification != null">
+                certification = #{certification},
+            </if>
+            <if test="harvardSchool != null">
+                harvard_school = #{harvardSchool},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="image != null">
+                image = #{image},
+            </if>
+            update_at = now()
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <delete id="remove">
+        delete from degree_program
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="removeBySchoolId">
+        delete from degree_program
+        where harvard_school in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="list" resultType="edu.harvard.academics.entity.DegreeProgram">
+        select * from degree_program
+        <where>
+            <if test="schools != null and schools.size() > 0">
+                and harvard_school.abbr in
+                <foreach collection="schools" item="school" open="(" separator="," close=")">
+                    #{school}
+                </foreach>
+            </if>
+            <if test="degreeLevel != null and degreeLevel.length() != 0">
+                and certification.degree_level = #{degreeLevel}
+            </if>
+            <if test="nameBySearch != null and nameBySearch.length() != 0">
+                and (
+                degree_program.name like concat('%', #{nameBySearch}, '%')
+                or
+                degree_program.description like concat('%', #{nameBySearch}, '%')
+                )
+            </if>
+        </where>
+    </select>
+
+</mapper>
